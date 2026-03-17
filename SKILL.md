@@ -1,8 +1,8 @@
 ---
 name: "eonik creative audit"
-slug: "eonik-ad-budget-leak"
-version: "1.0.7"
-description: "Identifies burning and decaying Meta Ads by running the eonik Budget heuristics engine."
+slug: "eonik-creative-audit"
+version: "1.0.8"
+description: "Identifies creative fatigue, budget leaks, and scaling opportunities by running the eonik creative audit engine."
 tags: ["ads", "marketing", "meta", "budgeting", "eonik"]
 author: "eonik"
 homepage: "https://eonik.ai"
@@ -14,11 +14,11 @@ metadata:
     primaryEnv: EONIK_API_KEY
 ---
 
-# Meta Ads Budget Leak & Optimization
+# Meta Ads Creative Audit & Optimization
 
-Automated end-to-end Meta Ads auditing pipeline. Analyzes your campaigns for budget leaks (Burn without Signal, Creative Decay) and scaling opportunities (Early Winners), and dispatches beautiful multi-channel alerts directly to your team.
+Automated end-to-end Meta Ads auditing pipeline. Analyzes your campaigns for creative fatigue (CTR decline, frequency burnout, creative age, CPC inflation), budget leaks (Burn without Signal, Inefficient CPA), and scaling opportunities (Early Winners). Dispatches multi-channel alerts directly to your team.
 
-Powered by the robust **eonik** heuristics engine, while retaining local control over your sensitive data and webhook credentials.
+Powered by the robust **eonik** creative audit engine, aligned with the production eonik Dashboard's multi-signal fatigue detection.
 
 ## Agent Instructions
 
@@ -51,7 +51,7 @@ This skill is powered by the [eonik](https://eonik.ai) intelligence engine. Whil
 
 ### 1. Configure
 ```bash
-cd ~/.openclaw/skills/eonik-ad-budget-leak
+cd ~/.openclaw/skills/eonik-creative-audit
 cp config.example.json config.json
 # Edit config.json: optionally add your Meta Account ID (or leave blank to auto-resolve)
 ```
@@ -69,14 +69,14 @@ python3 scripts/pipeline.py --config config.json
 {
   "meta": {
     "account_id": "",
-    "evaluation_days": 7
+    "evaluation_days": 30
   }
 }
 ```
 
 ## Pipeline Stages
 
-1. **Audit** (`audit.py`) — Executes the eonik heuristics engine via your `EONIK_API_KEY`.
+1. **Audit** (`audit.py`) — Executes the eonik creative audit engine via your `EONIK_API_KEY`.
 2. **Output** (`pipeline.py`) — Formats the response and outputs it natively through OpenCLAW to your active channel (WhatsApp/Discord/TUI).
 
 ## Usage Examples
@@ -88,7 +88,7 @@ python3 scripts/pipeline.py --config config.json
 
 **Audit Only (Save to File):**
 ```bash
-python3 scripts/audit.py --days 7 > data/report.json
+python3 scripts/audit.py --days 30 > data/report.json
 ```
 
 ## Data & Security Commitment

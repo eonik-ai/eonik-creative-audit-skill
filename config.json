@@ -2,5 +2,6 @@
   "meta": {
     "account_id": "",
     "evaluation_days": 30
-  }
+  },
+  "schedule": "0 8 * * *"
 }

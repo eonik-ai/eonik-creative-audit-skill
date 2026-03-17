@@ -16,12 +16,12 @@ Automated Meta Ads auditing and optimization. Detect budget leaks, halt decaying
 
 ```bash
 # Install via ClawHub (recommended)
-clawhub install eonik-ad-budget-leak
+clawhub install eonik-creative-audit
 
 # Or manual install
 cd ~/.openclaw/skills/
-git clone https://github.com/eonik-ai/eonik-ad-budget-leak-skill eonik-ad-budget-leak
-cd eonik-ad-budget-leak
+git clone https://github.com/eonik-ai/eonik-creative-audit-skill eonik-creative-audit
+cd eonik-creative-audit
 ```
 
 ### 2. Configure

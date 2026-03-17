@@ -9,7 +9,7 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description="Trigger the eonik Creative Experimentation audit")
     parser.add_argument("--account_id", required=False, help="Meta Ad Account ID (Optional, will use connected account if omitted)")
-    parser.add_argument("--days", type=int, default=7, help="Days to evaluate (default: 7)")
+    parser.add_argument("--days", type=int, default=30, help="Days to evaluate (default: 30)")
     args = parser.parse_args()
 
     api_key = os.environ.get("EONIK_API_KEY")
@@ -54,9 +54,19 @@ def main():
             "account_id": report.get("account_id", ""),
             "audit_date": report.get("audit_date", ""),
             "currency_symbol": report.get("currency_symbol", "$"),
+            "total_spend": report.get("total_spend", 0.0),
+            "total_impressions": report.get("total_impressions", 0),
+            "total_clicks": report.get("total_clicks", 0),
+            "total_ctr": report.get("total_ctr", 0.0),
+            "total_cpc": report.get("total_cpc", 0.0),
+            "total_conversions": report.get("total_conversions", 0.0),
             "flagged_ads_count": report.get("flagged_ads_count", 0),
             "total_leaked_spend": report.get("total_leaked_spend", 0.0),
             "creative_insight": report.get("creative_insight"),
+            "dna_fatigue": report.get("dna_fatigue"),
+            "creative_learnings": report.get("creative_learnings"),
+            "creative_predictions": report.get("creative_predictions"),
+            "win_rate": report.get("win_rate"),
             "pause_recommendations": report.get("pause_recommendations", []),
             "scale_recommendations": report.get("scale_recommendations", []),
             "monitor_recommendations": report.get("monitor_recommendations", [])

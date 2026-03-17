@@ -1,10 +1,10 @@
 {
-  "name": "eonik-ad-budget-leak",
-  "version": "1.0.7",
-  "description": "Identifies burning and decaying Meta Ads by running the eonik Budget heuristics engine.",
+  "name": "eonik-creative-audit",
+  "version": "1.0.8",
+  "description": "Identifies creative fatigue, budget leaks, and scaling opportunities by running the eonik creative audit engine.",
   "author": "eonik",
   "license": "MIT",
-  "source": "https://github.com/eonik-ai/eonik-ad-budget-leak-skill",
+  "source": "https://github.com/eonik-ai/eonik-creative-audit-skill",
   "homepage": "https://eonik.ai",
   "tags": [
     "ads",
