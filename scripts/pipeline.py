@@ -28,6 +28,7 @@ def main():
 
     account_id = config.get("meta", {}).get("account_id")
     days = config.get("meta", {}).get("evaluation_days", 30)
+    redact = config.get("meta", {}).get("redact_sensitive", False)
     
     if account_id == "YOUR_ACCOUNT_ID_OR_LEAVE_BLANK_TO_AUTO_RESOLVE" or account_id == "":
         account_id = None
@@ -73,25 +74,26 @@ def main():
         flagged = data.get('flagged_ads_count', 0)
 
         # --- Account Performance Overview ---
-        acct_spend = data.get('total_spend', 0.0)
-        acct_impressions = data.get('total_impressions', 0)
-        acct_clicks = data.get('total_clicks', 0)
+        acct_spend = "***" if redact else f"{cs}{data.get('total_spend', 0.0):,.2f}"
+        acct_impressions = "***" if redact else f"{data.get('total_impressions', 0):,}"
+        acct_clicks = "***" if redact else f"{data.get('total_clicks', 0):,}"
         acct_ctr = data.get('total_ctr', 0.0)
-        acct_cpc = data.get('total_cpc', 0.0)
-        acct_conversions = data.get('total_conversions', 0.0)
+        acct_cpc = "***" if redact else f"{cs}{data.get('total_cpc', 0.0):,.2f}"
+        acct_conversions = "***" if redact else f"{data.get('total_conversions', 0.0):,.0f}"
 
         print(f"\n📊 Account Performance ({days}d)")
-        print(f"   Spend: {cs}{acct_spend:,.2f}")
-        print(f"   Impressions: {acct_impressions:,}")
-        print(f"   Clicks: {acct_clicks:,}")
+        print(f"   Spend: {acct_spend}")
+        print(f"   Impressions: {acct_impressions}")
+        print(f"   Clicks: {acct_clicks}")
         print(f"   CTR: {acct_ctr:.2f}%")
-        print(f"   CPC: {cs}{acct_cpc:,.2f}")
-        print(f"   Conversions: {acct_conversions:,.0f}")
+        print(f"   CPC: {acct_cpc}")
+        print(f"   Conversions: {acct_conversions}")
 
         # --- Impact Summary ---
+        spent_str = "***" if redact else f"{cs}{spent:,.2f}"
         print(f"\n💰 Impact Summary")
         print(f"   Flags Found: {flagged}")
-        print(f"   Wasted Spend Detected: {cs}{spent:,.2f}")
+        print(f"   Wasted Spend Detected: {spent_str}")
 
         # --- Creative Intelligence ---
         insight = data.get("creative_insight")
@@ -136,14 +138,14 @@ def main():
         if pauses:
             print(f"\n🚨 Urgent Actions ({len(pauses)} ads)")
             for i, ad in enumerate(pauses, 1):
-                _print_ad_detail(ad, cs, is_pause=True)
+                _print_ad_detail(ad, cs, is_pause=True, redact=redact)
 
         # --- Scale Recommendations ---
         scales = data.get("scale_recommendations", [])
         if scales:
             print(f"\n🚀 Scale Opportunities ({len(scales)} ads)")
             for i, ad in enumerate(scales, 1):
-                _print_ad_detail(ad, cs, is_pause=False)
+                _print_ad_detail(ad, cs, is_pause=False, redact=redact)
 
         # --- Monitor Recommendations ---
         monitors = data.get("monitor_recommendations", [])
@@ -152,14 +154,14 @@ def main():
             for i, ad in enumerate(monitors, 1):
                 rec = ad.get("recommendation", {})
                 reason = rec.get("reason", "")
-                ad_name = ad.get("ad_name", "Unknown")
+                ad_name = "[REDACTED]" if redact else ad.get("ad_name", "Unknown")
                 category = ad.get("category", "Monitoring")
-                spend = ad.get("spend", 0)
+                spend = "***" if redact else f"{cs}{ad.get('spend', 0):,.2f}"
                 ctr = ad.get("ctr", 0)
 
                 print(f"\n   🔍 {ad_name}")
                 print(f"     Category: {category}")
-                print(f"     Spend: {cs}{spend:,.2f} | CTR: {ctr:.2f}%")
+                print(f"     Spend: {spend} | CTR: {ctr:.2f}%")
                 if reason:
                     print(f"     Note: {reason}")
 
@@ -176,13 +178,13 @@ def main():
     print("\nPipeline Complete!")
 
 
-def _print_ad_detail(ad, cs, is_pause=True):
+def _print_ad_detail(ad, cs, is_pause=True, redact=False):
     """Print a single ad's detail block."""
     rec = ad.get("recommendation", {})
     category = ad.get("category", "Flagged")
     action = rec.get("action", "PAUSE" if is_pause else "SCALE")
     reason = rec.get("reason", "")
-    ad_name = ad.get("ad_name", "Unknown")
+    ad_name = "[REDACTED]" if redact else ad.get("ad_name", "Unknown")
     
     if is_pause:
         action_emoji = "⏸️" if action == "PAUSE" else "🔄"
@@ -194,15 +196,15 @@ def _print_ad_detail(ad, cs, is_pause=True):
     print(f"     Reason: {reason}")
     
     # Metrics
-    spend = ad.get("spend", 0)
-    cpa = ad.get("cpa", 0)
+    spend = "***" if redact else f"{cs}{ad.get('spend', 0):,.2f}"
+    cpa = "***" if redact else f"{cs}{ad.get('cpa', 0):,.2f}"
     ctr = ad.get("ctr", 0)
     hook = ad.get("hook_rate", 0)
-    roas = ad.get("roas", 0)
+    roas = "***" if redact else f"{ad.get('roas', 0):.2f}"
     
-    metrics_line = f"     Spend: {cs}{spend:,.2f} | CPA: {cs}{cpa:,.2f} | CTR: {ctr:.2f}%"
+    metrics_line = f"     Spend: {spend} | CPA: {cpa} | CTR: {ctr:.2f}%"
     if not is_pause:
-        metrics_line += f" | ROAS: {roas:.2f}"
+        metrics_line += f" | ROAS: {roas}"
     if hook > 0:
         metrics_line += f" | Hook Rate: {hook:.1f}%"
     print(metrics_line)

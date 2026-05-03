@@ -1,6 +1,7 @@
 {
   "meta": {
     "account_id": "",
-    "evaluation_days": 30
+    "evaluation_days": 30,
+    "redact_sensitive": true
   }
 }

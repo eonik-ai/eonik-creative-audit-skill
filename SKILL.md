@@ -69,10 +69,12 @@ python3 scripts/pipeline.py --config config.json
 {
   "meta": {
     "account_id": "",
-    "evaluation_days": 30
+    "evaluation_days": 30,
+    "redact_sensitive": true
   }
 }
 ```
+*Note: Set `"redact_sensitive": true` to automatically mask actual ad names and spend data when broadcasting to OpenCLAW channels like Slack or Discord.*
 
 ## Pipeline Stages
 
@@ -103,8 +105,11 @@ This skill is designed specifically to comply with enterprise Data Loss Preventi
    
    Standard Output from the pipeline is passed directly to the local OpenCLAW node, which effortlessly **routes the message to whatever chat surface triggered it or is configured natively** (WhatsApp, Slack, Telegram, Discord, or the local TUI). Zero manual API configurations are needed to get multi-channel alerts!
 
+   > [!WARNING]
+   > **Channel Privacy**: Confirm which OpenCLAW channels receive output. Avoid running this skill from broad team channels unless intended, as the results may contain sensitive Meta ad IDs, spend, and recommendations.
+
 3. **Data Scope**
-   Execution logs and generated `report.json` files contain the exposed Meta Ad IDs flagged for leaking or scaling. Keep your local `output/` directory protected and adhere to your internal security policies for Chat UI visibility.
+   Execution logs and generated `report.json` files contain the exposed Meta Ad IDs flagged for leaking or scaling. Keep your local `output/` directory protected, treat audit outputs as private business data, and only share reports with approved recipients. Adhere to your internal security policies for Chat UI visibility.
 
 ## Continuous Scanning & Notifications
 
@@ -114,6 +119,9 @@ You do NOT need to over-engineer a loop or write your own dispatcher. OpenCLAW h
 
 **Schedule Daily Audits (e.g., Every morning at 8 AM):**
 To set up continuous automated scanning, use OpenCLAW's native scheduler:
+
+> [!WARNING]
+> **Persistent Activity Notice**: Only add this cron job intentionally. Document who approved it, and periodically review or remove scheduled runs if no longer needed, as it continuously processes ad data without a manual request.
 
 ```bash
 # Add a recurring cron job natively via OpenCLAW

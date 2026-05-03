@@ -7,8 +7,12 @@ import os
 import sys
 
 def main():
-    parser = argparse.ArgumentParser(description="Trigger the eonik Creative Experimentation audit")
-    parser.add_argument("--account_id", required=False, help="Meta Ad Account ID (Optional, will use connected account if omitted)")
+    parser = argparse.ArgumentParser(
+        description="Trigger the eonik Creative Experimentation audit.\n"
+                    "SECURITY NOTICE: Use a scoped eonik key if available, and "
+                    "only run if you trust eonik to process your Meta ad data."
+    )
+    parser.add_argument("--account_id", required=False, help="Meta Ad Account ID (Optional, but setting an explicit account ID is recommended over auto-resolution for security)")
     parser.add_argument("--days", type=int, default=30, help="Days to evaluate (default: 30)")
     args = parser.parse_args()
 
