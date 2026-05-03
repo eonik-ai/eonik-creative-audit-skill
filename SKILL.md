@@ -1,7 +1,7 @@
 ---
 name: "eonik creative audit"
 slug: "eonik-creative-audit"
-version: "1.0.8"
+version: "1.0.9"
 description: "Identifies creative fatigue, budget leaks, and scaling opportunities by running the eonik creative audit engine."
 tags: ["ads", "marketing", "meta", "budgeting", "eonik"]
 author: "eonik"
