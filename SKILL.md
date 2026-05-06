@@ -23,13 +23,14 @@ Powered by the robust **eonik** creative audit engine, aligned with the producti
 ## Agent Instructions
 
 When a user triggers this skill, you MUST follow these steps exactly:
-1.  **Check Configuration:** Check if `config.json` exists in the local directory.
-2.  **Request Input (if needed):** If `config.json` is missing, check if they want to run it on their default connected Meta account. Once confirmed, copy `config.example.json` to `config.json` (the Meta Account ID can be left blank as it auto-resolves).
-3.  **Execute Pipeline:** Once `config.json` is present and configured, you MUST run the audit pipeline natively by executing the following command in the terminal:
+1.  **Check Configuration:** Verify that `config.json` exists and includes an explicit `meta.account_id` that starts with `act_`.
+2.  **Require Explicit Scope:** If `config.json` is missing or the account scope is not explicit, ask the user to confirm the exact Meta account and set it in `config.json` before running.
+3.  **Confirm Private Channel:** Before execution, confirm results will be posted only in an approved private channel/context (not a broad team channel).
+4.  **Execute Pipeline:** Once account scope and channel confirmation are complete, run:
     ```bash
     python3 scripts/pipeline.py --config config.json
     ```
-4.  **Display Results:** After the script finishes, read the output report (typically `output/audit-<date>.json`) and provide a concise, formatted summary of the findings to the user. Do not invent details; only report what the script output contains.
+5.  **Display Results:** After the script finishes, read the output report (typically `output/audit-<date>.json`) and provide a concise, formatted summary of findings. Do not invent details; only report what the script output contains.
 
 ## Triggers
 
@@ -53,7 +54,7 @@ This skill is powered by the [eonik](https://eonik.ai) intelligence engine. Whil
 ```bash
 cd ~/.openclaw/skills/eonik-creative-audit
 cp config.example.json config.json
-# Edit config.json: optionally add your Meta Account ID (or leave blank to auto-resolve)
+# Edit config.json: set an explicit Meta Account ID (act_...)
 ```
 
 ### 2. Run Audit Pipeline
@@ -68,9 +69,10 @@ python3 scripts/pipeline.py --config config.json
 ```json
 {
   "meta": {
-    "account_id": "",
+    "account_id": "act_1234567890",
     "evaluation_days": 30,
-    "redact_sensitive": true
+    "redact_sensitive": true,
+    "allow_auto_resolve_account": false
   }
 }
 ```
@@ -115,13 +117,13 @@ This skill is designed specifically to comply with enterprise Data Loss Preventi
 
 The original objective of this skill is to completely automate budget optimization by continuously scanning your ad accounts and notifying your team on external channels (WhatsApp, Slack, Telegram) when leaks are detected.
 
-You do NOT need to over-engineer a loop or write your own dispatcher. OpenCLAW has a built-in, native cron scheduler that will automatically run the skill and route the output to your linked channels.
+OpenCLAW has a built-in cron scheduler, but scheduling is strictly opt-in and must only be enabled with explicit owner approval.
 
 **Schedule Daily Audits (e.g., Every morning at 8 AM):**
 To set up continuous automated scanning, use OpenCLAW's native scheduler:
 
 > [!WARNING]
-> **Persistent Activity Notice**: Only add this cron job intentionally. Document who approved it, and periodically review or remove scheduled runs if no longer needed, as it continuously processes ad data without a manual request.
+> **Approval Required**: Cron/scheduled execution is optional. Enable it only after explicit approval from the account owner/security approver, document the approval, and periodically review or remove scheduled runs.
 
 ```bash
 # Add a recurring cron job natively via OpenCLAW

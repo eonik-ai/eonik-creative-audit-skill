@@ -28,10 +28,25 @@ def main():
 
     account_id = config.get("meta", {}).get("account_id")
     days = config.get("meta", {}).get("evaluation_days", 30)
-    redact = config.get("meta", {}).get("redact_sensitive", False)
-    
+    redact = config.get("meta", {}).get("redact_sensitive", True)
+    allow_auto_resolve_account = config.get("meta", {}).get("allow_auto_resolve_account", False)
+
+    if isinstance(account_id, str):
+        account_id = account_id.strip()
     if account_id == "YOUR_ACCOUNT_ID_OR_LEAVE_BLANK_TO_AUTO_RESOLVE" or account_id == "":
         account_id = None
+
+    if account_id and not str(account_id).startswith("act_"):
+        print("Invalid `meta.account_id` in config: must begin with `act_`.", file=sys.stderr)
+        sys.exit(1)
+
+    if not account_id and not allow_auto_resolve_account:
+        print(
+            "Missing `meta.account_id`: set an explicit `act_...` account_id or set "
+            "`meta.allow_auto_resolve_account` to true to opt in to auto-resolve.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     run_date = datetime.datetime.now().strftime("%Y-%m-%d")
     output_dir = "output"
@@ -175,6 +190,7 @@ def main():
     except Exception as e:
         print(f"Failed to parse or format the audit report: {e}")
         
+    print(f"\nRedaction mode: {'ON' if redact else 'OFF'}")
     print("\nPipeline Complete!")
 
 

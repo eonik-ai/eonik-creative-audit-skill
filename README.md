@@ -61,9 +61,15 @@ This skill is designed to integrate as a primary agent tool:
 - You must supply the user's `act_XXXX` via natural language passing or CLI flags.
 - OpenClaw workers manage the instantiation of your environmental keys dynamically before running `python3 scripts/pipeline.py`.
 
+## Security Defaults
+
+- `meta.redact_sensitive` defaults to `true` and should remain enabled unless explicitly approved otherwise.
+- Use explicit account scoping with `meta.account_id` (must start with `act_`) before running audits.
+- Auto-resolving account scope is disabled by default and should only be enabled with explicit opt-in.
+
 ## Cron Integration
 
-Run daily audits every morning to catch budget leaks before they waste spend. Use OpenCLAW's native scheduler:
+Cron scheduling is opt-in only. Enable scheduled audits only with explicit approval from the account owner/security approver:
 
 ```bash
 openclaw cron add --name "daily-eonik-audit" --cron "0 8 * * *" --message "Run the eonik ad audit pipeline" --session isolated
